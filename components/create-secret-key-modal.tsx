@@ -30,9 +30,18 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
   });
   const [generatedKey, setGeneratedKey] = useState('');
   const [copied, setCopied] = useState(false);
+  
+  // Check if all required fields are filled
+  const isFormValid = formData.name.trim() !== '' && formData.email.trim() !== '' && formData.server.trim() !== '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.server) {
+      alert('Please fill in all required fields: Name, Email, and Server');
+      return;
+    }
     
     // Generate the API key
     const apiKey = generateApiKey();
@@ -87,20 +96,21 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
           <div>
             <label className="block text-sm font-medium mb-2" htmlFor="name">
-              Name <span className="text-muted-foreground">Optional</span>
+              Name
             </label>
             <Input
               id="name"
-              placeholder="My Test Key"
+              placeholder="Jane Doe"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
               className="w-full"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2" htmlFor="email">
-              Email <span className="text-red-500">*</span>
+              Email
             </label>
             <Input
               id="email"
@@ -115,7 +125,7 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
 
           <div>
             <label className="block text-sm font-medium mb-2" htmlFor="server">
-              Server <span className="text-red-500">*</span>
+              Server
             </label>
             <Input
               id="server"
@@ -137,7 +147,12 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
             </Button>
             <Button
               type="submit"
-              className="bg-gray-700 hover:bg-gray-800 text-white"
+              disabled={!isFormValid}
+              className={`text-white ${
+                isFormValid 
+                  ? 'bg-black hover:bg-gray-800' 
+                  : 'bg-gray-300 cursor-not-allowed'
+              }`}
             >
               Create secret key
             </Button>

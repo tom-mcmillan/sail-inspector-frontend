@@ -68,7 +68,7 @@ export function AppSidebar({ user }: { user: any }) {
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium" htmlFor="command-input">
-              URL
+              Server
             </label>
             <Input
               id="command-input"
@@ -99,7 +99,7 @@ export function AppSidebar({ user }: { user: any }) {
             </div>
             <Input
               id="arguments-input"
-              placeholder="s-abc..0xyz"
+              placeholder=""
               value={args}
               onChange={(e) => setArgs(e.target.value)}
               className="focus:outline-none focus:ring-1 focus:ring-border"
@@ -108,7 +108,7 @@ export function AppSidebar({ user }: { user: any }) {
 
           <div className="space-y-2">
             <label className="text-sm font-medium" htmlFor="system-message-input">
-              System message
+              System message (optional)
             </label>
             <textarea
               id="system-message-input"
