@@ -93,7 +93,7 @@ export function AppSidebar({ user }: { user: any }) {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d1d5db'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ececf1'}
               >
-                <PlusIcon size={10} className="mr-1" />
+                <PlusIcon size={10} />
                 Create new secret key
               </Button>
             </div>

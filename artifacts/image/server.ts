@@ -6,7 +6,8 @@ export async function experimental_generateImage(config: any) {
   return {
     image: {
       url: 'https://via.placeholder.com/400x300?text=Generated+Image',
-      alt: 'Generated image placeholder'
+      alt: 'Generated image placeholder',
+      base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
     }
   };
 }
@@ -17,7 +18,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     let draftContent = '';
 
     const { image } = await experimental_generateImage({
-      model: myProvider.imageModel('small-model'),
+      model: backendConfig.models.artifact,
       prompt: title,
       n: 1,
     });
@@ -36,7 +37,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     let draftContent = '';
 
     const { image } = await experimental_generateImage({
-      model: myProvider.imageModel('small-model'),
+      model: backendConfig.models.artifact,
       prompt: description,
       n: 1,
     });

@@ -19,8 +19,24 @@ export function streamObject(config: any) {
       };
     },
     fullStream: (async function* () {
-      // Mock full stream response
-      yield { type: 'object', object: { code: 'Mock code response' } };
+      // Mock full stream response - adapt based on schema
+      const schema = config.schema;
+      const shape = schema?.shape || {};
+      
+      const mockData: any = {};
+      
+      // Create mock data based on the expected schema
+      if (shape.code) {
+        mockData.code = 'Mock code response';
+      }
+      if (shape.csv) {
+        mockData.csv = 'Name,Age,City\nJohn,30,New York\nJane,25,Chicago';
+      }
+      if (shape.text) {
+        mockData.text = 'Mock text response';
+      }
+      
+      yield { type: 'object', object: mockData };
     })()
   };
 }

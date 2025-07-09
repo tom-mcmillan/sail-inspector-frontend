@@ -25,14 +25,14 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
     const suggestions = await getSuggestions({ documentId });
 
     setMetadata({
-      suggestions,
+      suggestions: suggestions as unknown as Array<Suggestion>,
     });
   },
   onStreamPart: ({ streamPart, setMetadata, setArtifact }) => {
     if (streamPart.type === 'data-suggestion') {
       setMetadata((metadata) => {
         return {
-          suggestions: [...metadata.suggestions, streamPart.data],
+          suggestions: [...metadata.suggestions, streamPart.data as unknown as Suggestion],
         };
       });
     }

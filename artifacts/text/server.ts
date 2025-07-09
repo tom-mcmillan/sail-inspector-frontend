@@ -11,7 +11,10 @@ export function streamText(config: any) {
   return {
     textStream: async function* () {
       yield 'Mock text stream response';
-    }
+    },
+    fullStream: (async function* () {
+      yield { type: 'text', text: 'Mock full text stream response' };
+    })()
   };
 }
 
@@ -21,7 +24,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
     let draftContent = '';
 
     const { fullStream } = streamText({
-      model: myProvider.languageModel('artifact-model'),
+      model: backendConfig.models.artifact,
       system:
         'Write about the given topic. Markdown is supported. Use headings wherever appropriate.',
       experimental_transform: smoothStream({ chunking: 'word' }),
@@ -50,7 +53,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
     let draftContent = '';
 
     const { fullStream } = streamText({
-      model: myProvider.languageModel('artifact-model'),
+      model: backendConfig.models.artifact,
       system: updateDocumentPrompt(document.content, 'text'),
       experimental_transform: smoothStream({ chunking: 'word' }),
       prompt: description,

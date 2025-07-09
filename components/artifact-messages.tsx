@@ -3,7 +3,7 @@ import type { Vote } from '@/lib/db/schema';
 import { memo } from 'react';
 import equal from 'fast-deep-equal';
 import type { UIArtifact } from './artifact';
-import type { UseChatHelpers } from '@ai-sdk/react';
+import type { UseChatHelpers } from './multimodal-input';
 import { motion } from 'framer-motion';
 import { useMessages } from '@/hooks/use-messages';
 import type { ChatMessage } from '@/lib/types';
