@@ -2,27 +2,16 @@ import { auth } from '@/app/(auth)/auth';
 import {
   getChatById,
   getMessagesByChatId,
-  getStreamIdsByChatId,
 } from '@/lib/db/queries';
 import type { Chat } from '@/lib/db/schema';
 import { ChatSDKError } from '@/lib/errors';
-import type { ChatMessage } from '@/lib/types';
-import { createUIMessageStream, JsonToSseTransformStream } from 'ai';
-import { getStreamContext } from '../../route';
-import { differenceInSeconds } from 'date-fns';
+import { backendClient } from '@/lib/api/client';
 
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: chatId } = await params;
-
-  const streamContext = getStreamContext();
-  const resumeRequestedAt = new Date();
-
-  if (!streamContext) {
-    return new Response(null, { status: 204 });
-  }
 
   if (!chatId) {
     return new ChatSDKError('bad_request:api').toResponse();
@@ -34,7 +23,7 @@ export async function GET(
     return new ChatSDKError('unauthorized:chat').toResponse();
   }
 
-  let chat: Chat;
+  let chat: Chat | null;
 
   try {
     chat = await getChatById({ id: chatId });
@@ -50,63 +39,32 @@ export async function GET(
     return new ChatSDKError('forbidden:chat').toResponse();
   }
 
-  const streamIds = await getStreamIdsByChatId({ chatId });
-
-  if (!streamIds.length) {
-    return new ChatSDKError('not_found:stream').toResponse();
-  }
-
-  const recentStreamId = streamIds.at(-1);
-
-  if (!recentStreamId) {
-    return new ChatSDKError('not_found:stream').toResponse();
-  }
-
-  const emptyDataStream = createUIMessageStream<ChatMessage>({
-    execute: () => {},
-  });
-
-  const stream = await streamContext.resumableStream(recentStreamId, () =>
-    emptyDataStream.pipeThrough(new JsonToSseTransformStream()),
-  );
-
-  /*
-   * For when the generation is streaming during SSR
-   * but the resumable stream has concluded at this point.
-   */
-  if (!stream) {
+  try {
+    // Get messages from the database
     const messages = await getMessagesByChatId({ id: chatId });
-    const mostRecentMessage = messages.at(-1);
+    
+    // Convert messages to the format expected by the backend
+    const formattedMessages = messages.map(msg => ({
+      role: msg.role,
+      content: Array.isArray(msg.parts) ? msg.parts.map(part => part.text || '').join('') : String(msg.parts)
+    }));
 
-    if (!mostRecentMessage) {
-      return new Response(emptyDataStream, { status: 200 });
-    }
-
-    if (mostRecentMessage.role !== 'assistant') {
-      return new Response(emptyDataStream, { status: 200 });
-    }
-
-    const messageCreatedAt = new Date(mostRecentMessage.createdAt);
-
-    if (differenceInSeconds(resumeRequestedAt, messageCreatedAt) > 15) {
-      return new Response(emptyDataStream, { status: 200 });
-    }
-
-    const restoredStream = createUIMessageStream<ChatMessage>({
-      execute: ({ writer }) => {
-        writer.write({
-          type: 'data-appendMessage',
-          data: JSON.stringify(mostRecentMessage),
-          transient: true,
-        });
-      },
+    // Create streaming response from backend service
+    const response = await backendClient.createChatCompletion({
+      messages: formattedMessages,
+      stream: true
     });
 
-    return new Response(
-      restoredStream.pipeThrough(new JsonToSseTransformStream()),
-      { status: 200 },
-    );
+    // Return the streaming response
+    return new Response(response.body, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+  } catch (error) {
+    console.error('Error creating chat completion:', error);
+    return new ChatSDKError('bad_request:api').toResponse();
   }
-
-  return new Response(stream, { status: 200 });
 }

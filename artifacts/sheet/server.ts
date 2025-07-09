@@ -1,7 +1,7 @@
-import { myProvider } from '@/lib/ai/providers';
+import { backendConfig } from '@/lib/ai/providers';
 import { sheetPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
 import { createDocumentHandler } from '@/lib/artifacts/server';
-import { streamObject } from 'ai';
+import { streamObject } from '@/lib/ai/tools/request-suggestions';
 import { z } from 'zod';
 
 export const sheetDocumentHandler = createDocumentHandler<'sheet'>({

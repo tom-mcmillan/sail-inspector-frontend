@@ -1,8 +1,13 @@
 'use client';
 
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import type { DataUIPart } from 'ai';
 import type { CustomUIDataTypes } from '@/lib/types';
+
+// Mock DataUIPart type for backend integration
+export type DataUIPart<T> = {
+  type: string;
+  data: T;
+};
 
 interface DataStreamContextValue {
   dataStream: DataUIPart<CustomUIDataTypes>[];

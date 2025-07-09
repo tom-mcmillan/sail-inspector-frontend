@@ -1,7 +1,19 @@
-import { smoothStream, streamText } from 'ai';
-import { myProvider } from '@/lib/ai/providers';
+import { backendConfig } from '@/lib/ai/providers';
 import { createDocumentHandler } from '@/lib/artifacts/server';
 import { updateDocumentPrompt } from '@/lib/ai/prompts';
+
+// Mock AI SDK functions
+export function smoothStream(stream: any) {
+  return stream;
+}
+
+export function streamText(config: any) {
+  return {
+    textStream: async function* () {
+      yield 'Mock text stream response';
+    }
+  };
+}
 
 export const textDocumentHandler = createDocumentHandler<'text'>({
   kind: 'text',

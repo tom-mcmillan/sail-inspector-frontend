@@ -1,6 +1,16 @@
-import { generateId, type ModelMessage } from 'ai';
+import { generateId } from '../helpers';
 import { TEST_PROMPTS } from './basic';
-import type { LanguageModelV2StreamPart } from '@ai-sdk/provider';
+
+// Mock AI SDK types
+export type ModelMessage = {
+  role: string;
+  content: string | Array<any>;
+};
+
+export type LanguageModelV2StreamPart = {
+  type: string;
+  value: any;
+};
 
 export function compareMessages(
   firstMessage: ModelMessage,

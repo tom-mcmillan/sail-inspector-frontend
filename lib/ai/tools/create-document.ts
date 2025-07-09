@@ -1,5 +1,4 @@
 import { generateUUID } from '@/lib/utils';
-import { tool, type UIMessageStreamWriter } from 'ai';
 import { z } from 'zod';
 import type { Session } from 'next-auth';
 import {
@@ -7,6 +6,16 @@ import {
   documentHandlersByArtifactKind,
 } from '@/lib/artifacts/server';
 import type { ChatMessage } from '@/lib/types';
+
+// Mock tool function for backend integration
+export function tool(config: any) {
+  return config;
+}
+
+// Mock UIMessageStreamWriter type
+export type UIMessageStreamWriter<T> = {
+  write: (message: any) => void;
+};
 
 interface CreateDocumentProps {
   session: Session;

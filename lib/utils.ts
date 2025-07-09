@@ -1,15 +1,26 @@
-import type {
-  CoreAssistantMessage,
-  CoreToolMessage,
-  UIMessage,
-  UIMessagePart,
-} from 'ai';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { DBMessage, Document } from '@/lib/db/schema';
 import { ChatSDKError, type ErrorCode } from './errors';
-import type { ChatMessage, ChatTools, CustomUIDataTypes } from './types';
+import type { ChatMessage, ChatTools, CustomUIDataTypes, UIMessage } from './types';
 import { formatISO } from 'date-fns';
+
+// Mock AI SDK types for backend integration
+export type CoreAssistantMessage = {
+  role: 'assistant';
+  content: string;
+};
+
+export type CoreToolMessage = {
+  role: 'tool';
+  content: string;
+  toolCallId: string;
+};
+
+export type UIMessagePart = {
+  type: string;
+  text: string;
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

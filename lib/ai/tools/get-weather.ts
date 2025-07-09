@@ -1,5 +1,9 @@
-import { tool } from 'ai';
 import { z } from 'zod';
+
+// Mock tool function for backend integration
+export function tool(config: any) {
+  return config;
+}
 
 export const getWeather = tool({
   description: 'Get the current weather at a location',

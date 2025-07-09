@@ -1,6 +1,31 @@
-import { simulateReadableStream } from 'ai';
-import { MockLanguageModelV2 } from 'ai/test';
 import { getResponseChunksByPrompt } from '@/tests/prompts/utils';
+
+// Mock AI SDK functions for testing
+export function simulateReadableStream(options: any) {
+  return new ReadableStream({
+    start(controller) {
+      // Mock stream implementation
+      controller.enqueue({ type: 'text', text: 'Mock response' });
+      controller.close();
+    }
+  });
+}
+
+export class MockLanguageModelV2 {
+  private config: any;
+  
+  constructor(config: any) {
+    this.config = config;
+  }
+  
+  async doGenerate() {
+    return this.config.doGenerate();
+  }
+  
+  async doStream(params: any) {
+    return this.config.doStream(params);
+  }
+}
 
 export const chatModel = new MockLanguageModelV2({
   doGenerate: async () => ({

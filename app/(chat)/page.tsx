@@ -15,7 +15,8 @@ export default async function Page() {
       email: 'dev@example.com',
       name: 'Development User',
       type: 'regular' as const,
-    }
+    },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
   };
 
   const id = generateUUID();

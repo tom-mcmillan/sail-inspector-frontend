@@ -1,4 +1,4 @@
-import type { ModelMessage } from 'ai';
+import type { ModelMessage } from './utils';
 
 export const TEST_PROMPTS: Record<string, ModelMessage> = {
   USER_SKY: {

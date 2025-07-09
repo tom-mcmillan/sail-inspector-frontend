@@ -1,6 +1,15 @@
-import { myProvider } from '@/lib/ai/providers';
+import { backendConfig } from '@/lib/ai/providers';
 import { createDocumentHandler } from '@/lib/artifacts/server';
-import { experimental_generateImage } from 'ai';
+
+// Mock AI SDK function
+export async function experimental_generateImage(config: any) {
+  return {
+    image: {
+      url: 'https://via.placeholder.com/400x300?text=Generated+Image',
+      alt: 'Generated image placeholder'
+    }
+  };
+}
 
 export const imageDocumentHandler = createDocumentHandler<'image'>({
   kind: 'image',

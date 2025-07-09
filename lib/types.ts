@@ -3,7 +3,17 @@ import type { getWeather } from './ai/tools/get-weather';
 import type { createDocument } from './ai/tools/create-document';
 import type { updateDocument } from './ai/tools/update-document';
 import type { requestSuggestions } from './ai/tools/request-suggestions';
-import type { InferUITool, UIMessage } from 'ai';
+
+// Mock AI SDK types for backend integration
+export type UIMessage = {
+  role: string;
+  parts: Array<{
+    type: string;
+    text: string;
+  }>;
+};
+
+export type InferUITool<T> = T;
 
 import type { ArtifactKind } from '@/components/artifact';
 import type { Suggestion } from './db/schema';

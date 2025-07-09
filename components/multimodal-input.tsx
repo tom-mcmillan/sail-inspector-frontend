@@ -1,6 +1,6 @@
 'use client';
 
-import type { UIMessage } from 'ai';
+import type { UIMessage } from '@/lib/types';
 import cx from 'classnames';
 import type React from 'react';
 import {
@@ -21,12 +21,17 @@ import { PreviewAttachment } from './preview-attachment';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import equal from 'fast-deep-equal';
-import type { UseChatHelpers } from '@ai-sdk/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
 import type { VisibilityType } from './visibility-selector';
 import type { Attachment, ChatMessage } from '@/lib/types';
+
+// Mock UseChatHelpers type for backend integration
+export type UseChatHelpers<T> = {
+  status: 'idle' | 'loading' | 'ready' | 'submitted';
+  setMessages: (messages: T[]) => void;
+};
 
 function PureMultimodalInput({
   chatId,

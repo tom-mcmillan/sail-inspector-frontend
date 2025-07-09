@@ -7,9 +7,13 @@ import {
   expect,
   type Page,
 } from '@playwright/test';
-import { generateId } from 'ai';
 import { ChatPage } from './pages/chat';
 import { getUnixTime } from 'date-fns';
+
+// Mock generateId function
+export function generateId(): string {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
 
 export type UserContext = {
   context: BrowserContext;

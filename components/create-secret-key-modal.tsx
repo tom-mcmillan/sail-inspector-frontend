@@ -167,9 +167,9 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
       <h2 className="text-2xl font-semibold mb-4">Save your key</h2>
       
       <p className="text-sm text-muted-foreground mb-6">
-        Please save your secret key in a safe place since <span className="font-semibold">you won't be able to view it again</span>. 
+        Please save your secret key in a safe place since <span className="font-semibold">you won&apos;t be able to view it again</span>. 
         Keep it secure, as anyone with your API key can make requests on your behalf. 
-        If you do lose it, you'll need to generate a new one.
+        If you do lose it, you&apos;ll need to generate a new one.
       </p>
 
       <div className="relative mb-6">
