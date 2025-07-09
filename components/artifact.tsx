@@ -18,7 +18,7 @@ import { VersionFooter } from './version-footer';
 import { ArtifactActions } from './artifact-actions';
 import { ArtifactCloseButton } from './artifact-close-button';
 import { ArtifactMessages } from './artifact-messages';
-import { useSidebar } from './ui/sidebar';
+// Removed useSidebar - using fixed sidebar layout
 import { useArtifact } from '@/hooks/use-artifact';
 import { imageArtifact } from '@/artifacts/image/client';
 import { codeArtifact } from '@/artifacts/code/client';
@@ -100,7 +100,8 @@ function PureArtifact({
   const [document, setDocument] = useState<Document | null>(null);
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1);
 
-  const { open: isSidebarOpen } = useSidebar();
+  // With fixed sidebar, sidebar is always open and has fixed width (320px)
+  const SIDEBAR_WIDTH = 320;
 
   useEffect(() => {
     if (documents && documents.length > 0) {
@@ -266,12 +267,12 @@ function PureArtifact({
             <motion.div
               className="fixed bg-background h-dvh"
               initial={{
-                width: isSidebarOpen ? windowWidth - 256 : windowWidth,
+                width: windowWidth - SIDEBAR_WIDTH,
                 right: 0,
               }}
               animate={{ width: windowWidth, right: 0 }}
               exit={{
-                width: isSidebarOpen ? windowWidth - 256 : windowWidth,
+                width: windowWidth - SIDEBAR_WIDTH,
                 right: 0,
               }}
             />

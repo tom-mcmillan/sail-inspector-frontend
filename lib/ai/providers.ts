@@ -1,37 +1,41 @@
-import {
-  customProvider,
-  extractReasoningMiddleware,
-  wrapLanguageModel,
-} from 'ai';
-import { xai } from '@ai-sdk/xai';
-import {
-  artifactModel,
-  chatModel,
-  reasoningModel,
-  titleModel,
-} from './models.test';
-import { isTestEnvironment } from '../constants';
+// Frontend configuration for backend service
+export const backendConfig = {
+  // Backend service URL
+  baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
+  
+  // Model configurations (these will be handled by the backend)
+  models: {
+    chat: 'gpt-4o',
+    reasoning: 'o1-preview',
+    title: 'gpt-4o-mini',
+    artifact: 'gpt-4o',
+  },
+  
+  // Default agent configurations
+  agents: {
+    chatAgent: {
+      name: 'Chat Assistant',
+      instructions: 'You are a helpful assistant that provides clear, concise responses.',
+      model: 'gpt-4o',
+    },
+    reasoningAgent: {
+      name: 'Reasoning Assistant',
+      instructions: 'You are a reasoning assistant that thinks through problems step by step.',
+      model: 'o1-preview',
+    },
+    titleAgent: {
+      name: 'Title Generator',
+      instructions: 'Generate concise, descriptive titles for conversations.',
+      model: 'gpt-4o-mini',
+    },
+    artifactAgent: {
+      name: 'Artifact Generator',
+      instructions: 'Generate code, documents, and other artifacts based on user requests.',
+      model: 'gpt-4o',
+    },
+  },
+};
 
-export const myProvider = isTestEnvironment
-  ? customProvider({
-      languageModels: {
-        'chat-model': chatModel,
-        'chat-model-reasoning': reasoningModel,
-        'title-model': titleModel,
-        'artifact-model': artifactModel,
-      },
-    })
-  : customProvider({
-      languageModels: {
-        'chat-model': xai('grok-2-vision-1212'),
-        'chat-model-reasoning': wrapLanguageModel({
-          model: xai('grok-3-mini-beta'),
-          middleware: extractReasoningMiddleware({ tagName: 'think' }),
-        }),
-        'title-model': xai('grok-2-1212'),
-        'artifact-model': xai('grok-2-1212'),
-      },
-      imageModels: {
-        'small-model': xai.imageModel('grok-2-image'),
-      },
-    });
+// Export for backward compatibility
+export const myProvider = null;
+export const openaiClient = null;

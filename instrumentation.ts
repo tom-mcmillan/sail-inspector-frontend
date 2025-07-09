@@ -1,5 +1,6 @@
-import { registerOTel } from '@vercel/otel';
+// import { registerOTel } from '@vercel/otel';
 
 export function register() {
-  registerOTel({ serviceName: 'ai-chatbot' });
+  // registerOTel({ serviceName: 'ai-chatbot' });
+  console.log('Instrumentation disabled for debugging');
 }

@@ -1,25 +1,21 @@
 'use client';
 
-import { DefaultChatTransport } from 'ai';
-import { useChat } from '@ai-sdk/react';
+// import { DefaultChatTransport } from 'ai';
+// import { useChat } from '@ai-sdk/react';
 import { useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { ChatHeader } from '@/components/chat-header';
+import { useDraggablePane } from '@/hooks/use-draggable';
 import type { Vote } from '@/lib/db/schema';
-import { fetcher, fetchWithErrorHandlers, generateUUID } from '@/lib/utils';
+import { fetcher } from '@/lib/utils';
 import { Artifact } from './artifact';
 import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import type { VisibilityType } from './visibility-selector';
 import { useArtifactSelector } from '@/hooks/use-artifact';
-import { unstable_serialize } from 'swr/infinite';
-import { getChatHistoryPaginationKey } from './sidebar-history';
-import { toast } from './toast';
 import type { Session } from 'next-auth';
 import { useSearchParams } from 'next/navigation';
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
 import { useAutoResume } from '@/hooks/use-auto-resume';
-import { ChatSDKError } from '@/lib/errors';
 import type { Attachment, ChatMessage } from '@/lib/types';
 import { useDataStream } from './data-stream-provider';
 
@@ -44,55 +40,38 @@ export function Chat({
     chatId: id,
     initialVisibilityType,
   });
+  
+  const { height: inputAreaHeight, handleDragStart } = useDraggablePane(200);
 
   const { mutate } = useSWRConfig();
   const { setDataStream } = useDataStream();
+  
+  // Note: mutate and setDataStream are available for future backend integration
 
   const [input, setInput] = useState<string>('');
 
-  const {
-    messages,
-    setMessages,
-    sendMessage,
-    status,
-    stop,
-    regenerate,
-    resumeStream,
-  } = useChat<ChatMessage>({
-    id,
-    messages: initialMessages,
-    experimental_throttle: 100,
-    generateId: generateUUID,
-    transport: new DefaultChatTransport({
-      api: '/api/chat',
-      fetch: fetchWithErrorHandlers,
-      prepareSendMessagesRequest({ messages, id, body }) {
-        return {
-          body: {
-            id,
-            message: messages.at(-1),
-            selectedChatModel: initialChatModel,
-            selectedVisibilityType: visibilityType,
-            ...body,
-          },
-        };
-      },
-    }),
-    onData: (dataPart) => {
-      setDataStream((ds) => (ds ? [...ds, dataPart] : []));
-    },
-    onFinish: () => {
-      mutate(unstable_serialize(getChatHistoryPaginationKey));
-    },
-    onError: (error) => {
-      if (error instanceof ChatSDKError) {
-        toast({
-          type: 'error',
-          description: error.message,
-        });
-      }
-    },
-  });
+  // Mock useChat implementation for now
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+  
+  const sendMessage = async (message: any) => {
+    setStatus('loading');
+    // TODO: Replace with your Agent API call
+    console.log('Would send message to Agent:', message);
+    setStatus('idle');
+  };
+  
+  const stop = () => {
+    setStatus('idle');
+  };
+  
+  const regenerate = () => {
+    console.log('Would regenerate with Agent');
+  };
+  
+  const resumeStream = () => {
+    console.log('Would resume stream with Agent');
+  };
 
   const searchParams = useSearchParams();
   const query = searchParams.get('query');
@@ -128,43 +107,51 @@ export function Chat({
 
   return (
     <>
-      <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader
-          chatId={id}
-          selectedModelId={initialChatModel}
-          selectedVisibilityType={initialVisibilityType}
-          isReadonly={isReadonly}
-          session={session}
-        />
+      <div className="bg-card border-r border-border flex flex-col h-full">
+        <div className="flex-1 overflow-hidden">
+          <Messages
+            chatId={id}
+            status={status}
+            votes={votes}
+            messages={messages}
+            setMessages={setMessages}
+            regenerate={regenerate}
+            isReadonly={isReadonly}
+            isArtifactVisible={isArtifactVisible}
+          />
+        </div>
 
-        <Messages
-          chatId={id}
-          status={status}
-          votes={votes}
-          messages={messages}
-          setMessages={setMessages}
-          regenerate={regenerate}
-          isReadonly={isReadonly}
-          isArtifactVisible={isArtifactVisible}
-        />
-
-        <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
-          {!isReadonly && (
-            <MultimodalInput
-              chatId={id}
-              input={input}
-              setInput={setInput}
-              status={status}
-              stop={stop}
-              attachments={attachments}
-              setAttachments={setAttachments}
-              messages={messages}
-              setMessages={setMessages}
-              sendMessage={sendMessage}
-              selectedVisibilityType={visibilityType}
-            />
-          )}
-        </form>
+        <div className="relative" style={{ height: `${inputAreaHeight}px` }}>
+          {/* Draggable handle */}
+          <div
+            className="absolute top-0 left-0 right-0 h-4 -mt-2 cursor-ns-resize flex items-center justify-center"
+            onMouseDown={handleDragStart}
+          >
+            <div className="absolute w-full h-px bg-border" />
+            <div className="relative w-12 h-2 rounded-full" style={{ backgroundColor: '#ececf1' }} />
+          </div>
+          
+          <div className="p-4 border-t border-border bg-card h-full overflow-hidden flex">
+            {!isReadonly && (
+              <div className="w-full max-w-3xl mx-auto flex">
+                <MultimodalInput
+                  chatId={id}
+                  input={input}
+                  setInput={setInput}
+                  status={status}
+                  stop={stop}
+                  attachments={attachments}
+                  setAttachments={setAttachments}
+                  messages={messages}
+                  setMessages={setMessages}
+                  sendMessage={sendMessage}
+                  selectedVisibilityType={visibilityType}
+                  className="h-full"
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <Artifact

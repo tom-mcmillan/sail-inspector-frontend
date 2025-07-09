@@ -1,0 +1,23 @@
+[
+  {
+    "key": "test123key",
+    "name": "Test Key",
+    "email": "test@example.com",
+    "server": "https://api.example.com",
+    "createdAt": "2025-07-09T02:06:35.906Z"
+  },
+  {
+    "key": "newkey456",
+    "name": "New Key",
+    "email": "user@example.com",
+    "server": "https://backend.example.com",
+    "createdAt": "2025-07-09T02:06:46.638Z"
+  },
+  {
+    "key": "uiTestKey",
+    "name": "UI Test",
+    "email": "ui@example.com",
+    "server": "https://ui.example.com",
+    "createdAt": "2025-07-09T02:09:32.944Z"
+  }
+]

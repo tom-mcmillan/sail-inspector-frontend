@@ -552,6 +552,24 @@ export const StopIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+export const CheckIcon = ({ size = 16 }: { size?: number }) => {
+  return (
+    <svg
+      height={size}
+      viewBox="0 0 16 16"
+      width={size}
+      style={{ color: 'currentcolor' }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.4697 3.46967L13 4L6 11L3 8L3.53033 7.46967L6 9.93934L12.4697 3.46967Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
 export const PaperclipIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
