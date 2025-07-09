@@ -182,7 +182,7 @@ export function CreateSecretKeyModal({ isOpen, onClose }: CreateSecretKeyModalPr
           >
             {copied ? (
               <>
-                <CheckIcon size={16} className="mr-1" />
+                <CheckIcon size={16} />
                 Copied
               </>
             ) : (

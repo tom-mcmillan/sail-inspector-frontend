@@ -50,7 +50,7 @@ export function compareMessages(
   return true;
 }
 
-const textToDeltas = (text: string): LanguageModelV2StreamPart[] => {
+const textToDeltas = (text: string): any[] => {
   const id = generateId();
 
   const deltas = text.split(' ').map((char) => ({
@@ -59,10 +59,10 @@ const textToDeltas = (text: string): LanguageModelV2StreamPart[] => {
     delta: `${char} `,
   }));
 
-  return [{ id, type: 'text-start' }, ...deltas, { id, type: 'text-end' }];
+  return [{ type: 'text-start' }, ...deltas, { type: 'text-end' }] as any;
 };
 
-const reasoningToDeltas = (text: string): LanguageModelV2StreamPart[] => {
+const reasoningToDeltas = (text: string): any[] => {
   const id = generateId();
 
   const deltas = text.split(' ').map((char) => ({
@@ -72,16 +72,16 @@ const reasoningToDeltas = (text: string): LanguageModelV2StreamPart[] => {
   }));
 
   return [
-    { id, type: 'reasoning-start' },
+    { type: 'reasoning-start' },
     ...deltas,
-    { id, type: 'reasoning-end' },
-  ];
+    { type: 'reasoning-end' },
+  ] as any;
 };
 
 export const getResponseChunksByPrompt = (
   prompt: ModelMessage[],
   isReasoningEnabled = false,
-): LanguageModelV2StreamPart[] => {
+): any[] => {
   const recentMessage = prompt.at(-1);
 
   if (!recentMessage) {
@@ -98,7 +98,7 @@ export const getResponseChunksByPrompt = (
           finishReason: 'stop',
           usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
         },
-      ];
+      ] as any;
     } else if (compareMessages(recentMessage, TEST_PROMPTS.USER_GRASS)) {
       return [
         ...reasoningToDeltas(

@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { Textarea } from './ui/textarea';
 import { deleteTrailingMessages } from '@/app/(chat)/actions';
-import type { UseChatHelpers } from '@ai-sdk/react';
+import type { UseChatHelpers } from './multimodal-input';
 import type { ChatMessage } from '@/lib/types';
 import { getTextFromMessage } from '@/lib/utils';
 
@@ -84,7 +84,7 @@ export function MessageEditor({
               id: message.id,
             });
 
-            setMessages((messages) => {
+            setMessages((messages: ChatMessage[]) => {
               const index = messages.findIndex((m) => m.id === message.id);
 
               if (index !== -1) {

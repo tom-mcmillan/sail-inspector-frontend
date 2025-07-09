@@ -6,7 +6,7 @@ import type { ArtifactKind } from '@/components/artifact';
 import type { Document } from '../db/schema';
 import { saveDocument } from '../db/queries';
 import type { Session } from 'next-auth';
-import type { UIMessageStreamWriter } from 'ai';
+import type { UIMessageStreamWriter } from '../ai/tools/create-document';
 import type { ChatMessage } from '../types';
 
 export interface SaveDocumentProps {
@@ -57,7 +57,6 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
           id: args.id,
           title: args.title,
           content: draftContent,
-          kind: config.kind,
           userId: args.session.user.id,
         });
       }
@@ -77,7 +76,6 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
           id: args.document.id,
           title: args.document.title,
           content: draftContent,
-          kind: config.kind,
           userId: args.session.user.id,
         });
       }

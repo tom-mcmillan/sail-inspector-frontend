@@ -57,7 +57,7 @@ export const requestSuggestions = ({
         .string()
         .describe('The ID of the document to request edits'),
     }),
-    execute: async ({ documentId }) => {
+    execute: async ({ documentId }: any) => {
       const document = await getDocumentById({ id: documentId });
 
       if (!document || !document.content) {
@@ -83,7 +83,7 @@ export const requestSuggestions = ({
         }),
       });
 
-      for await (const element of elementStream) {
+      for await (const element of elementStream()) {
         // @ts-ignore todo: fix type
         const suggestion: Suggestion = {
           originalText: element.originalSentence,
@@ -112,6 +112,8 @@ export const requestSuggestions = ({
             userId,
             createdAt: new Date(),
             documentCreatedAt: document.createdAt,
+            title: document.title,
+            description: suggestion.description || '',
           })),
         });
       }

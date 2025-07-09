@@ -6,11 +6,9 @@ import type { requestSuggestions } from './ai/tools/request-suggestions';
 
 // Mock AI SDK types for backend integration
 export type UIMessage = {
+  id: string;
   role: string;
-  parts: Array<{
-    type: string;
-    text: string;
-  }>;
+  parts: Array<any>;
 };
 
 export type InferUITool<T> = T;
@@ -54,11 +52,7 @@ export type CustomUIDataTypes = {
   finish: null;
 };
 
-export type ChatMessage = UIMessage<
-  MessageMetadata,
-  CustomUIDataTypes,
-  ChatTools
->;
+export type ChatMessage = UIMessage;
 
 export interface Attachment {
   name: string;

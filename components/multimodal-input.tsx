@@ -29,8 +29,12 @@ import type { Attachment, ChatMessage } from '@/lib/types';
 
 // Mock UseChatHelpers type for backend integration
 export type UseChatHelpers<T> = {
-  status: 'idle' | 'loading' | 'ready' | 'submitted';
-  setMessages: (messages: T[]) => void;
+  status: 'idle' | 'loading' | 'ready' | 'submitted' | 'streaming';
+  setMessages: (messages: T[] | ((messages: T[]) => T[])) => void;
+  regenerate: () => void;
+  stop: () => void;
+  sendMessage: (message: any) => void;
+  resumeStream: () => void;
 };
 
 function PureMultimodalInput({
@@ -395,7 +399,7 @@ function PureSendButton({
       }}
       disabled={input.length === 0 || uploadQueue.length > 0}
     >
-      <ArrowUpIcon size={16} className="text-white" />
+      <ArrowUpIcon size={16} />
     </Button>
   );
 }

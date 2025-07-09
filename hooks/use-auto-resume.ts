@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { UseChatHelpers } from '@ai-sdk/react';
+import type { UseChatHelpers } from '@/components/multimodal-input';
 import type { ChatMessage } from '@/lib/types';
 import { useDataStream } from '@/components/data-stream-provider';
 
@@ -40,7 +40,7 @@ export function useAutoResume({
     const dataPart = dataStream[0];
 
     if (dataPart.type === 'data-appendMessage') {
-      const message = JSON.parse(dataPart.data);
+      const message = JSON.parse(String(dataPart.data));
       setMessages([...initialMessages, message]);
     }
   }, [dataStream, initialMessages, setMessages]);

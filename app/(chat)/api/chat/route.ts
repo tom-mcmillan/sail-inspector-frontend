@@ -15,7 +15,7 @@ function convertToBackendMessages(messages: ChatMessage[]): Array<{ role: string
     role: message.role,
     content: Array.isArray(message.parts) 
       ? message.parts.map((part: any) => part.text).join('\n')
-      : message.content || '',
+      : (message as any).content || '',
   }));
 }
 
